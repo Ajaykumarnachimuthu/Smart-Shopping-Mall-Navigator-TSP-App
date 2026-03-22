@@ -5,8 +5,10 @@ import RouteVisualization from './components/RouteVisualization';
 import StoreMap from './components/StoreMap';
 import axios from 'axios';
 
-// Use environment variable for API URL
-const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
+// Use local backend for development, Railway for production
+const API_URL = process.env.NODE_ENV === 'production'
+    ? (process.env.REACT_APP_API_URL || 'https://smart-shopping-mall-navigator.up.railway.app/api')
+    : 'http://localhost:5000/api';
 
 function App() {
     const [routeData, setRouteData] = useState(null);
@@ -25,7 +27,7 @@ function App() {
             })
             .catch(error => {
                 console.error('Error fetching stores:', error);
-                setError('Failed to connect to the server. Please check your connection.');
+                setError('Failed to connect to the server. Make sure backend is running on port 5000');
             });
     }, []);
 
@@ -68,6 +70,11 @@ function App() {
                     <p className="text-gray-600 text-lg">
                         Optimize your shopping route using AI-powered TSP algorithms
                     </p>
+                    {process.env.NODE_ENV !== 'production' && (
+                        <p className="text-sm text-green-600 mt-2">
+                            🟢 Running locally - Backend: http://localhost:5000
+                        </p>
+                    )}
                 </div>
 
                 {/* Controls */}
