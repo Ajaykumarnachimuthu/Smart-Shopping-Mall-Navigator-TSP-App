@@ -5,7 +5,8 @@ import RouteVisualization from './components/RouteVisualization';
 import StoreMap from './components/StoreMap';
 import axios from 'axios';
 
-const API_URL = 'http://localhost:5000/api';
+// Use environment variable for API URL
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
 
 function App() {
     const [routeData, setRouteData] = useState(null);
@@ -22,7 +23,10 @@ function App() {
             .then(response => {
                 setStores(response.data.stores);
             })
-            .catch(error => console.error('Error fetching stores:', error));
+            .catch(error => {
+                console.error('Error fetching stores:', error);
+                setError('Failed to connect to the server. Please check your connection.');
+            });
     }, []);
 
     const handleOptimize = async (items) => {
@@ -42,7 +46,7 @@ function App() {
                 setRouteData(response.data);
             }
         } catch (err) {
-            setError('Failed to optimize route. Please try again.');
+            setError(err.response?.data?.error || 'Failed to optimize route. Please try again.');
             console.error(err);
         } finally {
             setLoading(false);
@@ -51,7 +55,6 @@ function App() {
 
     const handleStoreSelect = (store) => {
         setSelectedStore(store);
-        // You can add auto-add to shopping list feature here
     };
 
     return (
@@ -89,7 +92,7 @@ function App() {
                     </select>
                 </div>
 
-                {/* Main Content - Grid Layout */}
+                {/* Main Content */}
                 <div className="grid lg:grid-cols-2 gap-8 max-w-6xl mx-auto">
                     <ShoppingForm onOptimize={handleOptimize} loading={loading} />
 
@@ -121,27 +124,6 @@ function App() {
                         {error}
                     </div>
                 )}
-
-                {/* Features Section */}
-                <div className="max-w-6xl mx-auto mt-12 grid md:grid-cols-3 gap-6">
-                    <div className="bg-white bg-opacity-80 backdrop-blur-sm rounded-xl p-6 text-center">
-                        <div className="text-3xl mb-3">🎯</div>
-                        <h3 className="font-semibold text-gray-800 mb-2">Smart Optimization</h3>
-                        <p className="text-sm text-gray-600">AI-powered TSP algorithms find the shortest route for your shopping trip</p>
-                    </div>
-
-                    <div className="bg-white bg-opacity-80 backdrop-blur-sm rounded-xl p-6 text-center">
-                        <div className="text-3xl mb-3">⏰</div>
-                        <h3 className="font-semibold text-gray-800 mb-2">Time vs Distance</h3>
-                        <p className="text-sm text-gray-600">Choose between shortest distance or minimal time considering crowd levels</p>
-                    </div>
-
-                    <div className="bg-white bg-opacity-80 backdrop-blur-sm rounded-xl p-6 text-center">
-                        <div className="text-3xl mb-3">💡</div>
-                        <h3 className="font-semibold text-gray-800 mb-2">Smart Recommendations</h3>
-                        <p className="text-sm text-gray-600">Get personalized offers and recommendations based on your shopping list</p>
-                    </div>
-                </div>
             </div>
         </div>
     );

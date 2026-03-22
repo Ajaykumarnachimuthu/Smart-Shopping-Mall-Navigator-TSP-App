@@ -1,0 +1,29 @@
+{
+    "buildCommand": "npm run build",
+    "outputDirectory": "build",
+    "devCommand": "npm start",
+    "installCommand": "npm install",
+    "framework": "create-react-app",
+    "env": {
+        "REACT_APP_API_URL": "https://smart-mall-backend.up.railway.app/api"
+    },
+    "headers": [
+        {
+            "source": "/(.*)",
+            "headers": [
+                {
+                    "key": "X-Content-Type-Options",
+                    "value": "nosniff"
+                },
+                {
+                    "key": "X-Frame-Options",
+                    "value": "DENY"
+                },
+                {
+                    "key": "X-XSS-Protection",
+                    "value": "1; mode=block"
+                }
+            ]
+        }
+    ]
+}
