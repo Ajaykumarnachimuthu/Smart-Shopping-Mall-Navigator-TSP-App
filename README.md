@@ -28,6 +28,4 @@ An intelligent web application that optimizes shopping routes using the Travelin
 
 ### Backend Setup
 
-1. Navigate to the backend directory:
-```bash
-cd backend
+
